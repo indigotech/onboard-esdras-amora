@@ -1,9 +1,18 @@
+import 'reflect-metadata';
 import { Server } from './server';
-import dotenv from 'dotenv';
+import { Container } from 'typedi';
+import { useContainer as useClassValidatorContainer } from 'class-validator';
+import { useContainer as useTypeContainer } from 'typeorm';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
-const server = new Server();
+useClassValidatorContainer(Container);
+useTypeContainer(Container);
 
-server.listen((port) => {
-	console.log(`Server running at port: ${port}`);
-});
+const main = async () => {
+  const server = new Server();
+  await server.connect();
+  await server.run();
+};
+
+main();
