@@ -11,7 +11,7 @@ useTypeContainer(Container);
 
 const main = async () => {
   const server = new Server();
-  await server.connect();
+  await server.connectDb();
   await server.run();
 };
 

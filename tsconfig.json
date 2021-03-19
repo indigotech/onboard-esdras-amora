@@ -12,6 +12,19 @@
     "suppressImplicitAnyIndexErrors": true,
     "outDir": "dist",
     "skipLibCheck": true,
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "paths": {
+      "@core": ["./core"],
+      "@core/*": ["./core/*"],
+      "@data": ["./data"],
+      "@data/*": ["./data/*"],
+      "@domain": ["./domain"],
+      "@domain/*": ["./domain/*"],
+      "@api": ["./api"],
+      "@api/*": ["./api/*"],
+      "@test": ["./test"],
+      "@test/*": ["./test/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "coverage", "*.test.ts", "tsconfig-paths-dist.js"]
 }

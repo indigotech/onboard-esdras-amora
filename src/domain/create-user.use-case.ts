@@ -1,23 +1,25 @@
 import * as crypto from 'crypto';
 import { Service } from 'typedi';
-import { UserDbDataSource } from '../data/sources/user.db.datasource';
-import { UserInputModel } from './model';
+import { CryptoService } from '@core/crypto.service';
+import { UserDbDataSource } from '@data/sources/user.db.datasource';
+import { UserInputModel } from '@domain/model';
 
 @Service()
 export class CreateUserUseCase {
-  constructor(private datasource: UserDbDataSource) {}
+  constructor(private readonly datasource: UserDbDataSource, private readonly cryptoService: CryptoService) {}
 
-  async exec(input: UserInputModel): Promise<string> {
+  async exec(input: UserInputModel) {
     const sameEmailUser = await this.datasource.findOneByEmail(input.email);
 
     if (sameEmailUser) {
-      return 'error';
+      throw new Error('this email already exists');
     }
-    const hashedPassword = this.generateHash(input.password);
 
-    await this.datasource.insert({ ...input, password: hashedPassword });
+    const salt = this.cryptoService.generateRandomPassword();
 
-    return 'success';
+    const hashedPassword = this.cryptoService.generateHashWithSalt(input.password, salt);
+
+    return this.datasource.insert({ ...input, salt, password: hashedPassword });
   }
 
   private generateHash(value: string): string {

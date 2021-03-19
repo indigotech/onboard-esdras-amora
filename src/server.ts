@@ -29,7 +29,7 @@ export class Server {
     });
   }
 
-  public async connect() {
+  public connectDb() {
     const options: ConnectionOptions = {
       type: 'postgres',
       url: process.env.DATABASE_URL,
@@ -38,6 +38,6 @@ export class Server {
       logging: false,
     };
 
-    return await createConnection(options);
+    return createConnection(options);
   }
 }

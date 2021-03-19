@@ -8,11 +8,14 @@ export class UserEntity {
   @Column()
   name!: string;
 
-  @Column({ unique: true })
+  @Column()
   email!: string;
 
   @Column()
   password!: string;
+
+  @Column()
+  salt!: string;
 
   @CreateDateColumn()
   createdAt!: Date;
