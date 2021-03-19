@@ -1,37 +1,43 @@
-import 'reflect-metadata';
+import * as express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
 import { buildSchema } from 'type-graphql';
-import { HelloResolver } from './hello.resolver';
+import { ConnectionOptions, createConnection } from 'typeorm';
+import { Service } from 'typedi';
+import { Container } from 'typedi';
 
+@Service()
 export class Server {
-	private readonly app = express();
-	private readonly DEFAULT_PORT = parseInt(process.env.PORT) || 4000;
+  public async run() {
+    const schema = await buildSchema({
+      resolvers: [__dirname + '/**/*.resolver{.ts,.js}'],
+      validate: false,
+      container: Container,
+    });
 
-	constructor() {
-		this.run();
-	}
+    const port = +(process.env.PORT || 4000);
 
-	private async run() {
-		const schema = await buildSchema({
-			resolvers: [HelloResolver],
-			validate: false,
-		});
+    const server = new ApolloServer({
+      schema,
+    });
 
-		const server = new ApolloServer({
-			context: ({ req, res }) => ({
-				req,
-				res,
-			}),
-			schema,
-		});
+    const app = express();
 
-		server.applyMiddleware({ app: this.app });
-	}
+    server.applyMiddleware({ app });
 
-	public listen(callback: (port: number) => void): void {
-		this.app.listen(this.DEFAULT_PORT, () => {
-			callback(this.DEFAULT_PORT);
-		});
-	}
+    return app.listen({ port }, () => {
+      console.log(`server running at port: ${port}`);
+    });
+  }
+
+  public connectDb() {
+    const options: ConnectionOptions = {
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+      logging: false,
+    };
+
+    return createConnection(options);
+  }
 }

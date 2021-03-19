@@ -1,28 +1,30 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"module": "commonjs",
-		"lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
-		"strict": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true,
-		"strictFunctionTypes": true,
-		"noImplicitThis": true,
-		"noImplicitReturns": true,
-		"sourceMap": true,
-		"outDir": "./dist",
-		"moduleResolution": "node",
-		"removeComments": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"resolveJsonModule": true,
-		"baseUrl": "."
-	},
-	"exclude": ["node_modules"],
-	"include": ["./src/**/*.ts"]
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "target": "es2016",
+    "module": "commonjs",
+    "lib": ["es2016", "esnext.asynciterable"],
+    "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "paths": {
+      "@core": ["./core"],
+      "@core/*": ["./core/*"],
+      "@data": ["./data"],
+      "@data/*": ["./data/*"],
+      "@domain": ["./domain"],
+      "@domain/*": ["./domain/*"],
+      "@api": ["./api"],
+      "@api/*": ["./api/*"],
+      "@test": ["./test"],
+      "@test/*": ["./test/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "coverage", "*.test.ts", "tsconfig-paths-dist.js"]
 }
