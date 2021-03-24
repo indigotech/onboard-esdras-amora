@@ -1,4 +1,3 @@
-import * as crypto from 'crypto';
 import { Service } from 'typedi';
 import { CryptoService } from '@core/crypto.service';
 import { UserDbDataSource } from '@data/sources/user.db.datasource';
@@ -20,9 +19,5 @@ export class CreateUserUseCase {
     const hashedPassword = this.cryptoService.generateHashWithSalt(input.password, salt);
 
     return this.datasource.insert({ ...input, salt, password: hashedPassword });
-  }
-
-  private generateHash(value: string): string {
-    return crypto.createHash('sha256').update(value).digest('base64');
   }
 }
