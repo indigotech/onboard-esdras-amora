@@ -1,18 +1,8 @@
-import 'reflect-metadata';
-import { Server } from './server';
-import { Container } from 'typedi';
-import { useContainer as useClassValidatorContainer } from 'class-validator';
-import { useContainer as useTypeContainer } from 'typeorm';
-import * as dotenv from 'dotenv';
+import { loadApp } from '@api';
 
-dotenv.config();
-useClassValidatorContainer(Container);
-useTypeContainer(Container);
+declare let run: any;
+process.on('unhandledRejection', (up) => {
+  throw up;
+});
 
-const main = async () => {
-  const server = new Server();
-  await server.connectDb();
-  await server.run();
-};
-
-main();
+loadApp().then(() => run?.());
