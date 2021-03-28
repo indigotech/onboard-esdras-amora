@@ -1,3 +1,8 @@
-import app from '@api';
+import { loadApp } from '@api';
 
-app.run();
+declare let run: any;
+process.on('unhandledRejection', (up) => {
+  throw up;
+});
+
+loadApp().then(() => run?.());

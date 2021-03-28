@@ -15,10 +15,8 @@ if (process.env.TEST === 'OK') {
 useClassValidatorContainer(Container);
 useTypeContainer(Container);
 
-const laodApp = async () => {
+export const loadApp = async () => {
   const server = new Server();
   await server.connectDb();
   await server.run();
 };
-
-export default { run: laodApp };
