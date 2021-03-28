@@ -13,5 +13,4 @@ export interface UserModel {
 
 export interface InsertUserParams extends UserInputModel {
   salt: string;
-  password: string;
 }
