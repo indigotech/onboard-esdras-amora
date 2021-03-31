@@ -1,5 +1,5 @@
-import { GraphQLFormattedError, formatError } from 'graphql';
-import { isServerError } from '@core/error/base.error';
+import { GraphQLFormattedError, formatError, GraphQLError } from 'graphql';
+import { isServerError, ServerError } from '@core/error/base.error';
 
 interface FormatedServerError extends GraphQLFormattedError {
   code?: number;
@@ -7,9 +7,9 @@ interface FormatedServerError extends GraphQLFormattedError {
   additionalInfo?: string;
 }
 
-export const errorFormatter = (error: any) => {
+export const errorFormatter = (error: GraphQLError) => {
   let data: FormatedServerError = formatError(error);
-  const { originalError } = error;
+  const originalError = error.originalError as ServerError;
 
   if (isServerError(error.originalError)) {
     data = {

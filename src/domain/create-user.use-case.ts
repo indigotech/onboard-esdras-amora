@@ -5,6 +5,7 @@ import { UserInputModel } from '@domain/model';
 import { ServerError } from '@core/error/base.error';
 import { StatusCode } from '@core/error/error.type';
 import { PasswordValidator } from '@api/user/password.validator';
+import { LocalizationService } from '@core/localization';
 
 @Service()
 export class CreateUserUseCase {
@@ -12,6 +13,7 @@ export class CreateUserUseCase {
     private readonly datasource: UserDbDataSource,
     private readonly cryptoService: CryptoService,
     private readonly passwordValidator: PasswordValidator,
+    private readonly locale: LocalizationService,
   ) {}
 
   async exec(input: UserInputModel) {
@@ -20,7 +22,7 @@ export class CreateUserUseCase {
     const sameEmailUser = await this.datasource.findOneByEmail(input.email);
 
     if (sameEmailUser) {
-      throw new ServerError(StatusCode.BadRequest, 'this email already exists');
+      throw new ServerError(StatusCode.BadRequest, this.locale.__('user.error.create.email-already-in-use'));
     }
 
     const salt = this.cryptoService.generateRandomPassword();

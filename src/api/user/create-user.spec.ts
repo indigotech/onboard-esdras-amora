@@ -10,17 +10,26 @@ import { UserInputModel } from '@domain/model';
 import { CreateUserResponse } from './create-user.response';
 import { CreateUserInput } from './create-user.input';
 import { StatusCode } from '@core/error/error.type';
+import { LocalizationService } from '@core/localization';
 
 describe('GraphQL - UserResolver - Create', () => {
   let repository: Repository<UserEntity>;
   let cryptoService: CryptoService;
+  let locale: LocalizationService;
+
+  const CreateUserResponse = gql`
+    fragment CreateUserResponse on CreateUserResponse {
+      id
+      name
+      email
+    }
+  `;
 
   const createUserMutation = gql`
+    ${CreateUserResponse}
     mutation createUser($data: CreateUserInput!) {
       createUser(data: $data) {
-        id
-        name
-        email
+        ...CreateUserResponse
       }
     }
   `;
@@ -28,6 +37,7 @@ describe('GraphQL - UserResolver - Create', () => {
   before(() => {
     repository = getRepository(UserEntity);
     cryptoService = Container.get(CryptoService);
+    locale = Container.get(LocalizationService);
   });
 
   afterEach(async () => {
@@ -79,7 +89,7 @@ describe('GraphQL - UserResolver - Create', () => {
     const { body } = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, { data: input });
     expect(body.data).to.be.null;
     expect(body.errors?.[0].code).to.be.eq(StatusCode.BadRequest);
-    expect(body.errors?.[0].message).to.be.eq('this email already exists');
+    expect(body.errors?.[0].message).to.be.eq(locale.__('user.error.create.email-already-in-use'));
 
     const usersDb = await repository.find({ email: user.email });
     expect(usersDb).to.have.lengthOf(1);
@@ -92,27 +102,21 @@ describe('GraphQL - UserResolver - Create', () => {
   });
 
   it(`should give error with proper message if password doesn't follow the rules`, async () => {
+    const passwords = ['', 'abcdefgh', '1234567'];
+    const errors = ['user.error.password.too-short', 'user.error.password.no-digit', 'user.error.password.no-letter'];
     const input: CreateUserInput = {
       email: 'user@taqtile.com.br',
       password: '',
       name: 'User Test',
     };
 
-    let response = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, { data: input });
-    expect(response.body.data).to.be.null;
-    expect(response.body.errors?.[0].code).to.be.eq(StatusCode.BadRequest);
-    expect(response.body.errors?.[0].message).to.be.eq('user.error.password.too-short');
-
-    input.password = 'abcdefgh';
-    response = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, { data: input });
-    expect(response.body.data).to.be.null;
-    expect(response.body.errors?.[0].code).to.be.eq(StatusCode.BadRequest);
-    expect(response.body.errors?.[0].message).to.be.eq('user.error.password.no-digit');
-
-    input.password = '1234567';
-    response = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, { data: input });
-    expect(response.body.data).to.be.null;
-    expect(response.body.errors?.[0].code).to.be.eq(StatusCode.BadRequest);
-    expect(response.body.errors?.[0].message).to.be.eq('user.error.password.no-letter');
+    passwords.map(async (password, index) => {
+      const response = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+        data: { ...input, password },
+      });
+      expect(response.body.data).to.be.null;
+      expect(response.body.errors?.[0].code).to.be.eq(StatusCode.BadRequest);
+      expect(response.body.errors?.[0].message).to.be.eq(locale.__(errors[index]));
+    });
   });
 });
