@@ -5,4 +5,10 @@ process.on('unhandledRejection', (up) => {
   throw up;
 });
 
-loadApp().then(() => run?.());
+const isTest = process.argv[1].indexOf('mocha') >= 0;
+
+loadApp().then(() => {
+  if (isTest) {
+    run();
+  }
+});

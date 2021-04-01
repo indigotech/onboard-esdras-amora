@@ -4,6 +4,7 @@ import { buildSchema } from 'type-graphql';
 import { ConnectionOptions, createConnection } from 'typeorm';
 import { Service } from 'typedi';
 import { Container } from 'typedi';
+import { errorFormatter } from './api/graphql-error.formatter';
 
 @Service()
 export class Server {
@@ -18,6 +19,7 @@ export class Server {
 
     const server = new ApolloServer({
       schema,
+      formatError: errorFormatter,
     });
 
     const app = express();

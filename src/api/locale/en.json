@@ -1,0 +1,8 @@
+{
+  "login.error.email-not-registered": "The email you entered isn’t connected to an account",
+  "login.error.password-incorrect": "The password you’ve entered is incorrect",
+  "user.error.create.email-already-in-use": "This email is already in use",
+  "user.error.password.no-digit": "Your password must have at least 1 number",
+  "user.error.password.no-letter": "Your password must have at least 1 letter",
+  "user.error.password.too-short": "Your password must be at least 7 characters long"
+}

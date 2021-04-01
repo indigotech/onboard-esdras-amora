@@ -1,13 +1,17 @@
-import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
+import { Service } from 'typedi';
 import { ValidatePasswordUseCase } from '@domain/validate-password.use-case';
+import { ServerError } from '@core/error/base.error';
+import { StatusCode } from '@core/error/error.type';
+import { LocalizationService } from '@core/localization';
 
-@ValidatorConstraint()
-export class PasswordValidator implements ValidatorConstraintInterface {
-  validate(password: string): boolean {
-    return !ValidatePasswordUseCase.exec(password);
-  }
+@Service()
+export class PasswordValidator {
+  constructor(private readonly locale: LocalizationService) {}
 
-  defaultMessage(args: ValidationArguments): string {
-    return ValidatePasswordUseCase.exec(args.value);
+  validate(password: string): void {
+    const errorMessage = ValidatePasswordUseCase.exec(password);
+    if (errorMessage) {
+      throw new ServerError(StatusCode.BadRequest, this.locale.__(errorMessage));
+    }
   }
 }
