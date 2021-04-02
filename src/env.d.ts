@@ -1,6 +1,8 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    PORT: string;
-    DATABASE_URL: string;
+    PORT: string | undefined;
+    DATABASE_URL: string | undefined;
+    JWT_EXPIRATION_TIME: string | undefined;
+    JWT_SECRET: string | undefined;
   }
 }

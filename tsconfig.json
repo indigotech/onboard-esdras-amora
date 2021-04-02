@@ -13,6 +13,7 @@
     "outDir": "dist",
     "skipLibCheck": true,
     "sourceMap": true,
+    "resolveJsonModule": true,
     "paths": {
       "@core": ["./core"],
       "@core/*": ["./core/*"],
@@ -26,5 +27,6 @@
       "@test/*": ["./test/*"]
     }
   },
+  "include": [".", "src/api/locale/*.json"],
   "exclude": ["node_modules", "dist", "coverage", "*.test.ts", "tsconfig-paths-dist.js"]
 }

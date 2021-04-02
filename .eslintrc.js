@@ -23,6 +23,7 @@ module.exports = {
     'block-scoped-var': 'error',
     'array-bracket-spacing': ['error', 'never'],
     curly: ['error', 'all'],
+    '@typescript-eslint/restrict-plus-operands': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/require-await': 'off',

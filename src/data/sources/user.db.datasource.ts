@@ -12,7 +12,7 @@ export class UserDbDataSource {
     return this.dbOrmRepository.save(input);
   }
 
-  findOneByEmail(email: string): Promise<UserModel | undefined> {
+  findOneByEmail(email: string) {
     return this.dbOrmRepository.findOne({ where: { email } });
   }
 }
