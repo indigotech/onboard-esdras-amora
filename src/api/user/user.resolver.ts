@@ -1,8 +1,9 @@
-import { Arg, Mutation, Resolver } from 'type-graphql';
+import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql';
 import { Service } from 'typedi';
 import { CreateUserUseCase } from '@domain/create-user.use-case';
 import { LoginUserUseCase } from '@domain/login-user.use-case';
-import { CreateUserResponse } from './create-user.response';
+import { GetUserUseCase } from '@domain/get-user.use-case';
+import { UserResponse } from './create-user.response';
 import { CreateUserInput } from './create-user.input';
 import { LoginInput } from './login.input';
 import { LoginResponse } from './login.response';
@@ -10,10 +11,20 @@ import { LoginResponse } from './login.response';
 @Service()
 @Resolver()
 export class UserResolver {
-  constructor(private createUseCase: CreateUserUseCase, private loginUseCase: LoginUserUseCase) {}
+  constructor(
+    private createUseCase: CreateUserUseCase,
+    private loginUseCase: LoginUserUseCase,
+    private getUseCase: GetUserUseCase,
+  ) {}
 
-  @Mutation(() => CreateUserResponse, { description: 'Create user' })
-  createUser(@Arg('data') data: CreateUserInput): Promise<CreateUserResponse> {
+  @Query(() => UserResponse, { description: 'Get user by id' })
+  @Authorized()
+  user(@Arg('id', () => String, { description: 'User id' }) id: string): Promise<UserResponse> {
+    return this.getUseCase.exec(id);
+  }
+
+  @Mutation(() => UserResponse, { description: 'Create user' })
+  createUser(@Arg('data') data: CreateUserInput): Promise<UserResponse> {
     return this.createUseCase.exec(data);
   }
 

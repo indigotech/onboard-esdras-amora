@@ -12,6 +12,10 @@ export class UserDbDataSource {
     return this.dbOrmRepository.save(input);
   }
 
+  findOneById(id: string) {
+    return this.dbOrmRepository.findOne(id);
+  }
+
   findOneByEmail(email: string) {
     return this.dbOrmRepository.findOne({ where: { email } });
   }

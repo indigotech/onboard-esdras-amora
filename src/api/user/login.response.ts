@@ -1,15 +1,10 @@
 import { Field, ObjectType } from 'type-graphql';
+import { UserResponse } from './create-user.response';
 
 @ObjectType()
 export class LoginResponse {
-  @Field({ description: 'User id' })
-  id!: string;
-
-  @Field({ description: 'User name' })
-  name!: string;
-
-  @Field({ description: 'User email' })
-  email!: string;
+  @Field(() => UserResponse, { description: 'User default response' })
+  user!: UserResponse;
 
   @Field({ description: 'JWT token' })
   token!: string;
