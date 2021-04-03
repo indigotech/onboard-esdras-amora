@@ -7,10 +7,11 @@ import { UserEntity } from '@data/entities';
 import { RequestMaker } from '@test/request-maker';
 import { CryptoService } from '@core/crypto.service';
 import { UserInputModel } from '@domain/model';
-import { CreateUserResponse } from './create-user.response';
+import { UserResponse } from './create-user.response';
 import { CreateUserInput } from './create-user.input';
 import { StatusCode } from '@core/error/error.type';
 import { LocalizationService } from '@core/localization';
+import { UserResponseFragment } from './user.fragment';
 
 describe('GraphQL - UserResolver - Create', () => {
   let repository: Repository<UserEntity>;
@@ -18,19 +19,11 @@ describe('GraphQL - UserResolver - Create', () => {
   let locale: LocalizationService;
   let requestMaker: RequestMaker;
 
-  const CreateUserResponse = gql`
-    fragment CreateUserResponse on CreateUserResponse {
-      id
-      name
-      email
-    }
-  `;
-
   const createUserMutation = gql`
-    ${CreateUserResponse}
+    ${UserResponseFragment}
     mutation createUser($data: CreateUserInput!) {
       createUser(data: $data) {
-        ...CreateUserResponse
+        ...UserResponse
       }
     }
   `;
@@ -59,7 +52,7 @@ describe('GraphQL - UserResolver - Create', () => {
     };
 
     sinon.stub(cryptoService, 'generateRandomPassword').callsFake(() => mockSalt);
-    const response = await requestMaker.postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+    const response = await requestMaker.postGraphQL<{ createUser: UserResponse }>(createUserMutation, {
       data: input,
     });
     const data = response.body.data?.createUser;
@@ -90,7 +83,7 @@ describe('GraphQL - UserResolver - Create', () => {
       name: 'User Test',
     };
 
-    const { body } = await requestMaker.postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+    const { body } = await requestMaker.postGraphQL<{ createUser: UserResponse }>(createUserMutation, {
       data: input,
     });
     expect(body.data).to.be.null;
@@ -117,7 +110,7 @@ describe('GraphQL - UserResolver - Create', () => {
     };
 
     passwords.map(async (password, index) => {
-      const response = await requestMaker.postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+      const response = await requestMaker.postGraphQL<{ createUser: UserResponse }>(createUserMutation, {
         data: { ...input, password },
       });
       expect(response.body.data).to.be.null;
