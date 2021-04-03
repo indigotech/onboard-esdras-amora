@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { expect } from 'chai';
 import { gql } from 'apollo-server-express';
 import { getRepository, Repository } from 'typeorm';
-import { UserEntity } from '@data/entities';
+import { UserEntity } from '@data/db/entities';
 import { RequestMaker } from '@test/request-maker';
 import { StatusCode } from '@core/error/error.type';
 import { LocalizationService } from '@core/localization';

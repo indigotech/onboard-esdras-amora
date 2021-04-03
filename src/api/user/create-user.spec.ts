@@ -3,7 +3,7 @@ import Container from 'typedi';
 import { getRepository, Repository } from 'typeorm';
 import { expect } from 'chai';
 import { gql } from 'apollo-server-express';
-import { UserEntity } from '@data/entities';
+import { UserEntity } from '@data/db/entities';
 import { RequestMaker } from '@test/request-maker';
 import { CryptoService } from '@core/crypto.service';
 import { UserInputModel } from '@domain/model';

@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { CryptoService } from '@core/crypto.service';
-import { UserEntity } from '@data/entities';
+import { UserEntity } from '@data/db/entities';
 
 @Service()
 export class UserSeed {
