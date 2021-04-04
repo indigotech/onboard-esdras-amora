@@ -13,7 +13,7 @@ export class Server {
   public async run() {
     const schema = await buildSchema({
       resolvers: [__dirname + '/**/*.resolver{.ts,.js}'],
-      validate: false,
+      validate: true,
       container: Container,
       authChecker: AuthorizationMiddleware,
     });

@@ -32,7 +32,11 @@ export class RequestMaker {
     return this.token;
   }
 
-  postGraphQL = <T>(query: ASTNode, variables?: any, expectedStatus = 200): Promise<GraphQLResponse<T>> => {
+  postGraphQL = <TResponse, TVariables = any>(
+    query: ASTNode,
+    variables?: TVariables,
+    expectedStatus = 200,
+  ): Promise<GraphQLResponse<TResponse>> => {
     const agent = request(`http://localhost:${this.port}`).post('/graphql');
 
     agent.set('Content-Type', 'application/json');

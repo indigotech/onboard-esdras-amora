@@ -1,4 +1,3 @@
-import * as sinon from 'sinon';
 import Container from 'typedi';
 import { v4 as uuid } from 'uuid';
 import { expect } from 'chai';
@@ -29,10 +28,10 @@ describe('GraphQL - UserResolver - Get', () => {
     requestMaker = new RequestMaker();
     repository = getRepository(UserEntity);
     locale = Container.get(LocalizationService);
+    requestMaker.refreshAuth();
   });
 
   afterEach(async () => {
-    sinon.restore();
     await repository.delete({});
   });
 
