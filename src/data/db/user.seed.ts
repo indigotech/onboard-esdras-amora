@@ -12,8 +12,8 @@ export class UserSeed {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async exec() {
-    const users = new Array(50).fill(0).map(() => {
+  exec(amount = 50) {
+    const users = new Array(amount).fill(0).map(() => {
       const fakeUser = new UserEntity();
       fakeUser.name = Faker.name.findName();
       fakeUser.email = Faker.internet.email();
@@ -22,6 +22,6 @@ export class UserSeed {
       return fakeUser;
     });
 
-    await this.dbOrmRepository.save(users);
+    return this.dbOrmRepository.save(users);
   }
 }
