@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserEntity } from '@data/db/entities/user.entity';
 import { InsertUserParams, UserModel } from '@domain/model';
@@ -18,5 +18,9 @@ export class UserDbDataSource {
 
   findOneByEmail(email: string) {
     return this.dbOrmRepository.findOne({ where: { email } });
+  }
+
+  findAndCount(options: FindManyOptions) {
+    return this.dbOrmRepository.findAndCount(options);
   }
 }
