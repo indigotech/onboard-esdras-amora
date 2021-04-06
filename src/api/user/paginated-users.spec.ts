@@ -43,10 +43,7 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
     await repository.delete({});
   });
 
-  it('should return a paginated list of users', async () => {
-    const total = 50;
-    const page = 3;
-    const limit = 12;
+  const assertPagination = async (page: number, total: number, limit: number) => {
     const offset = limit * page;
     await userSeed.exec(total);
 
@@ -59,7 +56,7 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
       input,
     );
     const data = response.body.data;
-    expect(data?.users.nodes.length).to.be.eq(limit);
+    expect(data?.users.nodes.length).to.be.eq(Math.max(0, Math.min(limit, total - offset)));
     expect(data?.users.pageInfo).to.be.deep.eq({
       page: page,
       offset,
@@ -74,6 +71,23 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
     expect(count).to.be.eq(data?.users.count);
     dbUsers.map(({ id, email, name }, index) => {
       expect({ id, email, name }).to.be.deep.eq(data?.users.nodes[index]);
+    });
+  };
+
+  describe('should return a paginated list of users ', () => {
+    const total = 50;
+    const limit = 12;
+    it('on start', async () => {
+      await assertPagination(0, total, limit);
+    });
+    it('on middle', async () => {
+      await assertPagination(2, total, limit);
+    });
+    it('on final', async () => {
+      await assertPagination(4, total, limit);
+    });
+    it('after final', async () => {
+      await assertPagination(8, total, limit);
     });
   });
 
