@@ -18,5 +18,5 @@ useTypeContainer(Container);
 export const loadApp = async () => {
   const server = new Server();
   await server.connectDb();
-  await server.run();
+  return await server.run();
 };

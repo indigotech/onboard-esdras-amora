@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { UserEntity } from '@data/entities/user.entity';
+import { UserEntity } from '@data/db/entities/user.entity';
 import { InsertUserParams, UserModel } from '@domain/model';
 
 @Service()
