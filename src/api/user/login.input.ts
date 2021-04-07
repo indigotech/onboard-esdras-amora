@@ -9,6 +9,6 @@ export class LoginInput implements LoginInputModel {
   @Field({ description: 'User password' })
   password!: string;
 
-  @Field({ description: 'Increasse JWT expiration', defaultValue: false, nullable: true })
+  @Field({ description: 'Increasse JWT expiration', defaultValue: false })
   rememberMe!: boolean;
 }
