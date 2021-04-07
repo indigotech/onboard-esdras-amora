@@ -5,5 +5,6 @@
   "user.error.create.email-already-in-use": "This email is already in use",
   "user.error.password.no-digit": "Your password must have at least 1 number",
   "user.error.password.no-letter": "Your password must have at least 1 letter",
-  "user.error.password.too-short": "Your password must be at least 7 characters long"
+  "user.error.password.too-short": "Your password must be at least 7 characters long",
+  "get-user.error.not-found": "User not found"
 }

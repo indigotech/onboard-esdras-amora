@@ -30,6 +30,6 @@ export class LoginUserUseCase {
       throw new ServerError(StatusCode.BadRequest, this.locale.__('login.error.password-incorrect'));
     }
 
-    return { ...user, token: this.jwtService.sign<UserTokenData>({ userId: user.id }, input.rememberMe) };
+    return { user, token: this.jwtService.sign<UserTokenData>({ userId: user.id }, input.rememberMe) };
   }
 }

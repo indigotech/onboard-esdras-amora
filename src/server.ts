@@ -6,14 +6,16 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 import { Service } from 'typedi';
 import { Container } from 'typedi';
 import { errorFormatter } from './api/graphql-error.formatter';
+import { AuthorizationMiddleware } from './api/authorization.middleware';
 
 @Service()
 export class Server {
   public async run() {
     const schema = await buildSchema({
       resolvers: [__dirname + '/**/*.resolver{.ts,.js}'],
-      validate: false,
+      validate: true,
       container: Container,
+      authChecker: AuthorizationMiddleware,
     });
 
     const port = +(process.env.PORT || 4000);
