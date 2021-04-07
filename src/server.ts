@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { context } from 'api/server.context';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { ConnectionOptions, createConnection } from 'typeorm';
@@ -19,6 +20,7 @@ export class Server {
 
     const server = new ApolloServer({
       schema,
+      context,
       formatError: errorFormatter,
     });
 

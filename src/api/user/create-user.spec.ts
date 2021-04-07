@@ -4,7 +4,7 @@ import { getRepository, Repository } from 'typeorm';
 import { expect } from 'chai';
 import { gql } from 'apollo-server-express';
 import { UserEntity } from '@data/entities';
-import { postGraphQL } from '@test/request-maker';
+import { RequestMaker } from '@test/request-maker';
 import { CryptoService } from '@core/crypto.service';
 import { UserInputModel } from '@domain/model';
 import { CreateUserResponse } from './create-user.response';
@@ -16,6 +16,7 @@ describe('GraphQL - UserResolver - Create', () => {
   let repository: Repository<UserEntity>;
   let cryptoService: CryptoService;
   let locale: LocalizationService;
+  let requestMaker: RequestMaker;
 
   const CreateUserResponse = gql`
     fragment CreateUserResponse on CreateUserResponse {
@@ -35,6 +36,7 @@ describe('GraphQL - UserResolver - Create', () => {
   `;
 
   before(() => {
+    requestMaker = new RequestMaker();
     repository = getRepository(UserEntity);
     cryptoService = Container.get(CryptoService);
     locale = Container.get(LocalizationService);
@@ -57,7 +59,9 @@ describe('GraphQL - UserResolver - Create', () => {
     };
 
     sinon.stub(cryptoService, 'generateRandomPassword').callsFake(() => mockSalt);
-    const response = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, { data: input });
+    const response = await requestMaker.postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+      data: input,
+    });
     const data = response.body.data?.createUser;
     expect(data).to.be.not.empty;
 
@@ -86,7 +90,9 @@ describe('GraphQL - UserResolver - Create', () => {
       name: 'User Test',
     };
 
-    const { body } = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, { data: input });
+    const { body } = await requestMaker.postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+      data: input,
+    });
     expect(body.data).to.be.null;
     expect(body.errors?.[0].code).to.be.eq(StatusCode.BadRequest);
     expect(body.errors?.[0].message).to.be.eq(locale.__('user.error.create.email-already-in-use'));
@@ -111,7 +117,7 @@ describe('GraphQL - UserResolver - Create', () => {
     };
 
     passwords.map(async (password, index) => {
-      const response = await postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
+      const response = await requestMaker.postGraphQL<{ createUser: CreateUserResponse }>(createUserMutation, {
         data: { ...input, password },
       });
       expect(response.body.data).to.be.null;
