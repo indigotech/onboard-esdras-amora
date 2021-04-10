@@ -10,10 +10,10 @@ export class AddressEntity {
   cep!: string;
 
   @Column()
-  streat!: string;
+  street!: string;
 
   @Column()
-  number!: string;
+  streetNumber!: string;
 
   @Column({ nullable: true })
   complement?: string;

@@ -1,5 +1,5 @@
 import { loadApp } from '@api';
-import { UserSeed } from '@data/db/user.seed';
+import { UserSeed } from '@data/db/seeds';
 
 import Container from 'typedi';
 
