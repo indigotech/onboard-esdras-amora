@@ -7,7 +7,7 @@ import { UserEntity } from '@data/db/entities';
 import { RequestMaker } from '@test/request-maker';
 import { CryptoService } from '@core/crypto.service';
 import { UserInputModel } from '@domain/model';
-import { UserResponse } from './create-user.response';
+import { UserResponse } from './user.type';
 import { CreateUserInput } from './create-user.input';
 import { StatusCode } from '@core/error/error.type';
 import { LocalizationService } from '@core/localization';

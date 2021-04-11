@@ -8,7 +8,7 @@ import { PageInputModel, Paginated } from '@core/pagination';
 import { StatusCode } from '@core/error';
 import { UserEntity } from '@data/db/entities';
 import { UserSeed } from '@data/db/seeds';
-import { UserResponse } from './create-user.response';
+import { UserResponse } from './user.type';
 import { UserResponseFragment } from './user.fragment';
 
 describe('GraphQL - UserResolver - PaginatedUsers', () => {

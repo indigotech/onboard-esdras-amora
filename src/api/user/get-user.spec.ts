@@ -7,7 +7,7 @@ import { UserEntity } from '@data/db/entities';
 import { RequestMaker } from '@test/request-maker';
 import { StatusCode } from '@core/error/error.type';
 import { LocalizationService } from '@core/localization';
-import { UserResponse } from './create-user.response';
+import { UserResponse } from './user.type';
 import { UserResponseFragment } from './user.fragment';
 
 describe('GraphQL - UserResolver - Get', () => {

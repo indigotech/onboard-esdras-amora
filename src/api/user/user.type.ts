@@ -1,4 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
+import { AddressResponse } from './address.type';
 
 @ObjectType()
 export class UserResponse {
@@ -10,4 +11,7 @@ export class UserResponse {
 
   @Field({ description: 'User email' })
   email!: string;
+
+  @Field(() => [AddressResponse], { description: 'User addresses', nullable: true })
+  addresses?: AddressResponse[];
 }

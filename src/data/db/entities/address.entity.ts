@@ -27,6 +27,9 @@ export class AddressEntity {
   @Column()
   state!: string;
 
+  @Column({ nullable: true })
+  userId?: string;
+
   @ManyToOne(() => UserEntity, (user) => user.addresses, { cascade: true, onDelete: 'CASCADE' })
   user!: UserEntity;
 

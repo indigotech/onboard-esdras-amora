@@ -46,6 +46,7 @@
   "dependencies": {
     "apollo-server-express": "2.19.1",
     "class-validator": "0.13.1",
+    "dataloader": "2.0.0",
     "dotenv": "8.2.0",
     "graphql": "15.3.0",
     "i18n": "0.13.2",
