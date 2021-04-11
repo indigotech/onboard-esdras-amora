@@ -11,7 +11,7 @@ import { UserResponse } from './user.type';
 import { CreateUserInput } from './create-user.input';
 import { StatusCode } from '@core/error/error.type';
 import { LocalizationService } from '@core/localization';
-import { UserResponseFragment } from './user.fragment';
+import { UserResponseFragment } from './user.type';
 
 describe('GraphQL - UserResolver - Create', () => {
   let repository: Repository<UserEntity>;
@@ -65,7 +65,12 @@ describe('GraphQL - UserResolver - Create', () => {
     expect(userDb?.salt).to.be.eq(mockSalt);
     expect(userDb?.password).to.be.eq(cryptoService.generateHashWithSalt(password, mockSalt));
 
-    expect(data).to.be.deep.eq({ id: userDb?.id, name: userDb?.name, email: userDb?.email });
+    expect(data).to.be.deep.eq({
+      id: userDb?.id,
+      name: userDb?.name,
+      email: userDb?.email,
+      addresses: userDb?.addresses ?? null,
+    });
   });
 
   it('should give error if e-mail is already taken', async () => {

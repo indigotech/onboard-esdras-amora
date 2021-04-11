@@ -8,7 +8,7 @@ export class AddressLoader {
   constructor(private readonly datasource: AddressDbDataSource) {}
 
   exec() {
-    return new DataLoader<string, AddressResponse[]>(async (userIds) => {
+    return new DataLoader<string, AddressResponse[] | undefined>(async (userIds) => {
       const addresses = await this.datasource.findByUserIds(userIds as string[]);
       const userIdToAddress: Record<string, AddressResponse[]> = {};
       addresses.forEach((u) => {

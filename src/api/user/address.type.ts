@@ -1,3 +1,4 @@
+import { gql } from 'apollo-server-express';
 import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
@@ -26,3 +27,11 @@ export class AddressResponse {
   @Field()
   state!: string;
 }
+
+export const AddressResponseFragment = gql`
+  fragment AddressResponse on AddressResponse {
+    id
+    cep
+    street
+  }
+`;

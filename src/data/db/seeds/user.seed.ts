@@ -18,14 +18,13 @@ export class UserSeed {
     const arr = new Array(amount).fill(0);
     const users = await Promise.all(
       arr.map(async () => {
-        const addresses = await this.addressSeed.exec(Faker.datatype.number({ min: 0, max: 2 }));
-        const fakeUser = {
+        const fakeUser = this.dbOrmRepository.create({
           name: Faker.name.findName(),
           email: Faker.internet.email(),
           salt: this.cryptoService.generateRandomPassword(),
-          addresses: addresses,
+          addresses: await this.addressSeed.exec(Faker.datatype.number({ min: 0, max: 2 })),
           ...base,
-        };
+        });
 
         fakeUser.password = this.cryptoService.generateHashWithSalt('1234qwer', fakeUser.salt);
 
