@@ -7,8 +7,7 @@ import { UserEntity } from '@data/db/entities';
 import { RequestMaker } from '@test/request-maker';
 import { StatusCode } from '@core/error/error.type';
 import { LocalizationService } from '@core/localization';
-import { UserResponse } from './user.type';
-import { UserResponseFragment } from './user.type';
+import { UserResponse, UserResponseFragment } from './user.type';
 import { AddressSeed, UserSeed } from '@data/db/seeds';
 
 describe('GraphQL - UserResolver - Get', () => {

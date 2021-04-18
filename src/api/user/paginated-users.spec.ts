@@ -8,8 +8,7 @@ import { PageInputModel, Paginated } from '@core/pagination';
 import { StatusCode } from '@core/error';
 import { UserEntity } from '@data/db/entities';
 import { UserSeed } from '@data/db/seeds';
-import { UserResponse } from './user.type';
-import { UserResponseFragment } from './user.type';
+import { UserResponse, UserResponseFragment } from './user.type';
 import { AddressResponse } from './address.type';
 import { countBy } from 'lodash';
 
@@ -45,7 +44,7 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
   });
 
   after(async () => {
-    repository.delete({});
+    await repository.delete({});
   });
 
   const mapAddresses = (addresses: AddressResponse[] | undefined) => {

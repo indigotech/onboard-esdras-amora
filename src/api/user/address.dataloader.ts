@@ -11,11 +11,12 @@ export class AddressLoader {
     return new DataLoader<string, AddressResponse[] | undefined>(async (userIds) => {
       const addresses = await this.datasource.findByUserIds(userIds as string[]);
       const userIdToAddress: Record<string, AddressResponse[]> = {};
-      addresses.forEach((u) => {
-        if (!userIdToAddress[u.userId!]) {
-          userIdToAddress[u.userId!] = [u];
+
+      addresses.forEach((address) => {
+        if (!userIdToAddress[address.userId!]) {
+          userIdToAddress[address.userId!] = [address];
         } else {
-          userIdToAddress[u.userId!].push(u);
+          userIdToAddress[address.userId!].push(address);
         }
       });
 

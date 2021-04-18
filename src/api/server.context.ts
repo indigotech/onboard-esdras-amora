@@ -2,7 +2,7 @@ import { UserTokenData } from '@domain/model';
 import { Request, Response } from 'express';
 import { Container } from 'typedi';
 import { JwtService } from '@core/jwt.service';
-import { AddressLoader } from '@domain/address.dataloader';
+import { AddressLoader } from '@api/user/address.dataloader';
 
 export interface ServerContext {
   userId?: string;
