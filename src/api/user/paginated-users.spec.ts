@@ -7,7 +7,7 @@ import { RequestMaker } from '@test/request-maker';
 import { PageInputModel, Paginated } from '@core/pagination';
 import { StatusCode } from '@core/error';
 import { UserEntity } from '@data/db/entities';
-import { UserSeed } from '@data/db/user.seed';
+import { UserSeed } from '@data/db/seeds';
 import { UserResponse } from './create-user.response';
 import { UserResponseFragment } from './user.fragment';
 
@@ -91,7 +91,7 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
     });
   });
 
-  it('Should return a error if any arg is less than 0', async () => {
+  it('Should return an error if any arg is less than 0', async () => {
     await userSeed.exec();
     const input = {
       data: { limit: -1, page: 0 },
