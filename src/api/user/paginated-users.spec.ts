@@ -8,8 +8,9 @@ import { PageInputModel, Paginated } from '@core/pagination';
 import { StatusCode } from '@core/error';
 import { UserEntity } from '@data/db/entities';
 import { UserSeed } from '@data/db/seeds';
-import { UserResponse } from './create-user.response';
-import { UserResponseFragment } from './user.fragment';
+import { UserResponse, UserResponseFragment } from './user.type';
+import { AddressResponse } from './address.type';
+import { countBy } from 'lodash';
 
 describe('GraphQL - UserResolver - PaginatedUsers', () => {
   let repository: Repository<UserEntity>;
@@ -31,22 +32,28 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
       }
     }
   `;
+  const total = 25;
+  const limit = 6;
 
-  before(() => {
+  before(async () => {
     requestMaker = new RequestMaker();
     requestMaker.refreshAuth();
     repository = getRepository(UserEntity);
     userSeed = Container.get(UserSeed);
+    await userSeed.exec(total);
   });
 
-  afterEach(async () => {
+  after(async () => {
     await repository.delete({});
   });
 
-  const assertPagination = async (page: number, total: number, limit: number) => {
-    const offset = limit * page;
-    await userSeed.exec(total);
+  const mapAddresses = (addresses: AddressResponse[] | undefined) => {
+    const objectValues: string[] = [];
+    addresses?.forEach(({ id, cep, street }) => objectValues.push(...Object.values({ id, cep, street })));
+    return countBy(objectValues);
+  };
 
+  const assertPagination = async (page: number, total: number, limit: number, offset = limit * page) => {
     const input = {
       data: { limit, page },
     };
@@ -66,17 +73,25 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
       hasPreviousPage: offset > 0,
     });
 
-    const [dbUsers, count] = await repository.findAndCount({ take: limit, skip: offset, order: { name: 'ASC' } });
+    const [dbUsers, count] = await repository.findAndCount({
+      take: limit,
+      skip: offset,
+      order: { name: 'ASC' },
+      relations: ['addresses'],
+    });
     expect(dbUsers.length).to.be.eq(data?.users.nodes.length);
     expect(count).to.be.eq(data?.users.count);
-    dbUsers.map(({ id, email, name }, index) => {
-      expect({ id, email, name }).to.be.deep.eq(data?.users.nodes[index]);
+    dbUsers.map(({ id, email, name, addresses }, index) => {
+      expect({ id, email, name }).to.be.deep.eq({
+        id: data?.users.nodes[index].id,
+        email: data?.users.nodes[index].email,
+        name: data?.users.nodes[index].name,
+      });
+      expect(mapAddresses(addresses)).to.be.deep.eq(mapAddresses(data?.users.nodes[index].addresses));
     });
   };
 
   describe('should return a paginated list of users ', () => {
-    const total = 50;
-    const limit = 12;
     it('on start', async () => {
       await assertPagination(0, total, limit);
     });
@@ -92,7 +107,6 @@ describe('GraphQL - UserResolver - PaginatedUsers', () => {
   });
 
   it('Should return an error if any arg is less than 0', async () => {
-    await userSeed.exec();
     const input = {
       data: { limit: -1, page: 0 },
     };

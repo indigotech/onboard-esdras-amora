@@ -8,20 +8,22 @@ import { AddressEntity } from '@data/db/entities';
 export class AddressSeed {
   constructor(@InjectRepository(AddressEntity) private readonly dbOrmRepository: Repository<AddressEntity>) {}
 
-  exec(amount = 2) {
-    const users = new Array(amount).fill(0).map(() => {
-      const fakeAddress = new AddressEntity();
-      fakeAddress.cep = Faker.address.zipCode();
-      fakeAddress.street = Faker.address.streetName();
-      fakeAddress.streetNumber = Faker.datatype.number(9999).toString();
-      fakeAddress.complement = Faker.address.streetPrefix();
-      fakeAddress.neighborhood = Faker.address.streetName();
-      fakeAddress.city = Faker.address.city();
-      fakeAddress.state = Faker.address.stateAbbr();
+  exec(amount = 2, base: Partial<AddressEntity> = {}) {
+    const addresses = new Array(amount).fill(0).map(() => {
+      const fakeAddress = this.dbOrmRepository.create({
+        cep: Faker.address.zipCode(),
+        street: Faker.address.streetName(),
+        streetNumber: Faker.datatype.number(9999).toString(),
+        complement: Faker.address.streetPrefix(),
+        neighborhood: Faker.address.streetName(),
+        city: Faker.address.city(),
+        state: Faker.address.stateAbbr(),
+        ...base,
+      });
 
       return fakeAddress;
     });
 
-    return this.dbOrmRepository.save(users);
+    return this.dbOrmRepository.save(addresses);
   }
 }

@@ -1,18 +1,19 @@
-import { Arg, Authorized, Mutation, Query, Resolver } from 'type-graphql';
-import { Service } from 'typedi';
+import { Arg, Authorized, Ctx, FieldResolver, Mutation, Query, Resolver, Root } from 'type-graphql';
 import { PaginatedUsersUseCase } from '@domain/paginated-users.use-case';
 import { CreateUserUseCase } from '@domain/create-user.use-case';
 import { LoginUserUseCase } from '@domain/login-user.use-case';
 import { GetUserUseCase } from '@domain/get-user.use-case';
-import { PageInput } from '@api/common/page.input';
 import { PaginatedUsers } from './paginated-users.response';
-import { UserResponse } from './create-user.response';
 import { CreateUserInput } from './create-user.input';
-import { LoginInput } from './login.input';
+import { ServerContext } from '@api/server.context';
+import { PageInput } from '@api/common/page.input';
 import { LoginResponse } from './login.response';
+import { UserResponse } from './user.type';
+import { LoginInput } from './login.input';
+import { Service } from 'typedi';
 
 @Service()
-@Resolver()
+@Resolver(UserResponse)
 export class UserResolver {
   constructor(
     private createUseCase: CreateUserUseCase,
@@ -20,6 +21,12 @@ export class UserResolver {
     private getUseCase: GetUserUseCase,
     private getPaginatedUsersUseCase: PaginatedUsersUseCase,
   ) {}
+
+  @FieldResolver(() => String)
+  @Authorized()
+  addresses(@Root() user: UserResponse, @Ctx() { addressLoader }: ServerContext) {
+    return addressLoader.load(user.id);
+  }
 
   @Query(() => UserResponse, { description: 'Get user by id' })
   @Authorized()
